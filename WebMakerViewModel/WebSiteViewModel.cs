@@ -7,12 +7,18 @@ using WebMaker.Web.General;
 
 namespace WebMaker.ViewModel
 {
+    /// <summary>
+    /// ViewModel třídy WebSite
+    /// </summary>
     public class WebSiteViewModel : BaseViewModel, IWebSiteProvider
     {
         private const string newPageName = "newPage";
         private WebPageViewModel _selectedWebPageViewModel;
         private ObservableCollection<WebPageViewModel> _webPageViewModels = new ObservableCollection<WebPageViewModel>();
 
+        /// <summary>
+        /// Vytvoří novou instanci třídy WebSiteViewModel
+        /// </summary>
         public WebSiteViewModel()
         {
             AddPageCommand = new RelayCommand(AddPage);
@@ -21,10 +27,22 @@ namespace WebMaker.ViewModel
             SetMainPageCommand = new RelayCommand(SetMainPage);
         }
 
+        /// <summary>
+        /// Command pro přidání nové stránky
+        /// </summary>
         public ICommand AddPageCommand { get; }
+        /// <summary>
+        /// Command pro smazání stránky
+        /// </summary>
         public ICommand DeletePageCommand { get; }
+        /// <summary>
+        /// Command pro uložení do složky
+        /// </summary>
         public ICommand SaveCommand { get; }
 
+        /// <summary>
+        /// Zvolený WebPageViewModel
+        /// </summary>
         public WebPageViewModel SelectedWebPageViewModel
         {
             get => _selectedWebPageViewModel;
@@ -38,8 +56,14 @@ namespace WebMaker.ViewModel
             }
         }
 
+        /// <summary>
+        /// Command pro nastavení hlavní stránky
+        /// </summary>
         public ICommand SetMainPageCommand { get; }
 
+        /// <summary>
+        /// Obsažené stránky
+        /// </summary>
         public ObservableCollection<WebPageViewModel> WebPageViewModels
         {
             get => _webPageViewModels;
@@ -53,6 +77,9 @@ namespace WebMaker.ViewModel
             }
         }
 
+        /// <summary>
+        /// WebSite
+        /// </summary>
         public WebSite WebSite
         {
             get
@@ -64,6 +91,9 @@ namespace WebMaker.ViewModel
             }
         }
 
+        /// <summary>
+        /// Přidá novou stránku
+        /// </summary>
         public void AddPage()
         {
             if (ContainsPage(newPageName))
@@ -80,7 +110,10 @@ namespace WebMaker.ViewModel
                 AddPage(newPageName);
             }
         }
-
+        /// <summary>
+        /// Smaže stránku
+        /// </summary>
+        /// <param name="webPageViewModel">Stránka ke smazání</param>
         public void DeletePage(object webPageViewModel)
         {
             if (WebPageViewModels.Count > 1)
@@ -93,7 +126,9 @@ namespace WebMaker.ViewModel
                 }
             }
         }
-
+        /// <summary>
+        /// Uloží web do složky
+        /// </summary>
         public void Save()
         {
             using (var dialog = new FolderBrowserDialog())
@@ -105,7 +140,10 @@ namespace WebMaker.ViewModel
                 }
             }
         }
-
+        /// <summary>
+        /// Nastaví stránku jako hlavní
+        /// </summary>
+        /// <param name="webPageViewModel">Stránka, kterou nastavit jako hlavní</param>
         public void SetMainPage(object webPageViewModel)
         {
             var page = webPageViewModel as WebPageViewModel;
@@ -122,7 +160,11 @@ namespace WebMaker.ViewModel
         private void AddPage(string pageTitle) => WebPageViewModels.Add(new WebPageViewModel() { Title = pageTitle });
 
         private bool ContainsPage(string pageTitle) => WebPageViewModels.Any(webPageViewModel => webPageViewModel.Title == pageTitle);
-
+        /// <summary>
+        /// Vyvtvoří ViewModel ze třídy WebSite
+        /// </summary>
+        /// <param name="webSite">WebSite</param>
+        /// <returns>WebSite ViewModel</returns>
         public static WebSiteViewModel FromWebSite(WebSite webSite)
         {
             var webSiteViewModel = new WebSiteViewModel()

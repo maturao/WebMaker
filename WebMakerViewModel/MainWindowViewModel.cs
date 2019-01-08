@@ -6,78 +6,16 @@ using WebMaker.Template;
 
 namespace WebMaker.ViewModel
 {
+    /// <summary>
+    /// ViewModel pro hlavní okno
+    /// </summary>
     public class MainWindowViewModel : BaseViewModel
     {
         private WebSiteViewModel _webSiteViewModel;
 
-//        static MainWindowViewModel()
-//        {
-//            var webSite = new WebSiteViewModel()
-//            {
-//                WebPageViewModels = new ObservableCollection<WebPageViewModel>()
-//                {
-//                    new WebPageViewModel()
-//                    {
-//                        Title = "Hlavni",
-//                        WebElementViewModels = new ObservableCollection<WebElementViewModel>()
-//                        {
-//                            new WebHeaderViewModel()
-//                            {
-//                                Level = 2,
-//                                Content = "Nadpis"
-//                            },
-//                            new WebParagraphViewModel()
-//                            {
-//                                Content = "LoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmet"
-//                            },
-//                            new WebParagraphViewModel()
-//                            {
-//                                Content = "LoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmetLoremIpsumDolorSitAmet"
-//                            },
-//                            new WebListViewModel()
-//                            {
-//                                IsOrdered = true,
-//                                Content = @"first
-//second
-//third"
-//                            },
-//                            new WebImageViewModel()
-//                            {
-//                                Content = "https://i.kym-cdn.com/photos/images/original/001/251/488/5bf.jpg"
-//                            }
-//                        }
-//                    },
-//                    new WebPageViewModel()
-//                    {
-//                        Title = "Jen obrazek",
-//                        WebElementViewModels = new ObservableCollection<WebElementViewModel>()
-//                        {
-//                            new WebImageViewModel()
-//                            {
-//                                Content = "https://i.kym-cdn.com/photos/images/original/001/251/488/5bf.jpg"
-//                            }
-//                        }
-//                    },
-//                    new WebPageViewModel()
-//                    {
-//                        Title = "Jen text",
-//                        WebElementViewModels = new ObservableCollection<WebElementViewModel>()
-//                        {
-//                            new WebParagraphViewModel()
-//                            {
-//                                Content = "Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text "
-//                            }
-//                        }
-//                    }
-//                }
-//            };
-//            webSite.SelectedWebPageViewModel = webSite.WebPageViewModels[0];
-//            webSite.WebPageViewModels[0].IsMain = true;
-
-//            Instance = new MainWindowViewModel() { WebSiteViewModel = webSite };
-//            Instance.WebMakerServerViewModel.WebSiteProvider = Instance.WebSiteViewModel;
-//        }
-
+        /// <summary>
+        /// Vytvoří novou instancí třídy MainWindowViewModel
+        /// </summary>
         public MainWindowViewModel()
         {
             WebSiteViewModel = new WebSiteViewModel();
@@ -92,11 +30,23 @@ namespace WebMaker.ViewModel
             LoadTemplateCommand = new RelayCommand(LoadTemplate);
         }
 
-        public static MainWindowViewModel Instance { get; }
+        /// <summary>
+        /// Command pro načtění WebSiteViewModel z šablony
+        /// </summary>
         public ICommand LoadTemplateCommand { get; }
+        /// <summary>
+        /// Command pro uložení WebSiteViewModel jako šablony
+        /// </summary>
         public ICommand SaveTemplateCommand { get; }
+
+        /// <summary>
+        /// ViewModel pro WebMakerServer
+        /// </summary>
         public WebMakerServerViewModel WebMakerServerViewModel { get; }
 
+        /// <summary>
+        /// ViewModel pro WebSite
+        /// </summary>
         public WebSiteViewModel WebSiteViewModel
         {
             get => _webSiteViewModel;
@@ -110,6 +60,9 @@ namespace WebMaker.ViewModel
             }
         }
 
+        /// <summary>
+        /// Načte WebSiteViewModel z šablony
+        /// </summary>
         public void LoadTemplate()
         {
             using (var dialog = new OpenFileDialog())
@@ -126,6 +79,9 @@ namespace WebMaker.ViewModel
             }
         }
 
+        /// <summary>
+        /// Uloží WebSiteViewModel jako šablonu
+        /// </summary>
         public void SaveTemplate()
         {
             using (var dialog = new SaveFileDialog())

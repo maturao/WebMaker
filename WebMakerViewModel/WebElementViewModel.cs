@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebMaker.Web.Elements;
+﻿using WebMaker.Web.Elements;
 using WebMaker.Web.General;
 
 namespace WebMaker.ViewModel
 {
+    /// <summary>
+    /// ViewModel třídy WebElement s obsahem
+    /// </summary>
+    /// <typeparam name="T">Datový typ obsahu</typeparam>
     public abstract class WebElementViewModel<T> : WebElementViewModel
     {
         private T _content;
 
+        /// <summary>
+        /// Obsah
+        /// </summary>
         public T Content
         {
             get => _content;
@@ -29,10 +31,21 @@ namespace WebMaker.ViewModel
         }
     }
 
+    /// <summary>
+    /// ViewModel třídy WebElement
+    /// </summary>
     public abstract class WebElementViewModel : BaseViewModel
     {
+        /// <summary>
+        /// ViewModel převedený na WebElement
+        /// </summary>
         public abstract WebElement WebElement { get; }
 
+        /// <summary>
+        /// Vytvoří WebElementViewModel z WebElementu
+        /// </summary>
+        /// <param name="webElement">WebElement</param>
+        /// <returns>WebElementViewModel</returns>
         public static WebElementViewModel FromWebElement(WebElement webElement)
         {
             if (webElement is WebParagraph)
