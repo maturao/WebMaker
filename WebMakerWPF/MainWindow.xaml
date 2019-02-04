@@ -158,6 +158,7 @@
                     <Button Content="Save as template" Margin="3" Command="{Binding SaveTemplateCommand}" />
                     <Button Content="Load template" Margin="3" Command="{Binding LoadTemplateCommand}" />
                     <Button DataContext="{Binding WebMakerServerViewModel}" Content="{Binding ButtonText, Mode=OneWay}" Command="{Binding StartStopServerCommand}" Margin="3" />
+                    <TextBox DataContext="{Binding WebMakerServerViewModel}" Text="{Binding IPAddress}" Margin="3" IsEnabled="{Binding CanEditAdress}" />
                 </StackPanel>
             </Grid>
 
@@ -186,7 +187,6 @@
                      dd:DragDrop.IsDropTarget="True"
                      dd:DragDrop.DropHandler="{Binding}" />
             </Grid>
-
 
             <!-- Pages list -->
 

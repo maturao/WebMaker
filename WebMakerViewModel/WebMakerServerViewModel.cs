@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using WebMaker.Server;
+using System.Linq;
 
 namespace WebMaker.ViewModel
 {
@@ -12,6 +13,7 @@ namespace WebMaker.ViewModel
         private const string stopServerText = "Stop local server";
 
         private readonly WebMakerServer webMakerServer = new WebMakerServer();
+        private string _iPAddress;
         private bool _isRunning = false;
 
         /// <summary>
@@ -27,6 +29,27 @@ namespace WebMaker.ViewModel
         /// </summary>
         public string ButtonText => IsRunning ? stopServerText : startServerText;
 
+        public bool CanEditAdress
+        {
+            get
+            {
+                return !IsRunning;
+            }
+        }
+
+        public string IPAddress
+        {
+            get => _iPAddress;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value) && value != _iPAddress)
+                {
+                    _iPAddress = value;
+                    RaiseNotifyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// Zda server běží
         /// </summary>
@@ -39,6 +62,7 @@ namespace WebMaker.ViewModel
                 {
                     _isRunning = value;
                     RaiseNotifyChanged();
+                    RaiseNotifyChanged(nameof(CanEditAdress));
                 }
             }
         }
@@ -66,6 +90,7 @@ namespace WebMaker.ViewModel
             }
             else
             {
+                webMakerServer.IPAddress = new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
                 webMakerServer.Start();
                 IsRunning = true;
             }
