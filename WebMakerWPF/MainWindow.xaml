@@ -4,176 +4,112 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WebMaker.WPF"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:vm="clr-namespace:WebMaker.ViewModel;assembly=WebMakerViewModel"
         mc:Ignorable="d"
         Title="WebMaker" x:Name="WebMakerWindow" Height="600" Width="1200">
     <Window.Resources>
         <!-- Paragraph Template -->
         <DataTemplate DataType="{x:Type vm:WebParagraphViewModel}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Button Content="↑" Grid.Row="0" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemUpCommand}" />
-                <Button Content="↓" Grid.Row="1" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemDownCommand}"  />
-
-                <Border Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
-                        BorderBrush="Gray" BorderThickness="1" Margin="3">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="50"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="PARAGRAPH" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
-                            </Border>
-                            <Button Grid.Column="1" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
-                        </Grid>
-                        <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray" Padding="3"  />
-                    </StackPanel>
-                </Border>
-            </Grid>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="3">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="PARAGRAPH" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
+                        </Border>
+                        <Button Grid.Column="1" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
+                    </Grid>
+                    <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray" Padding="3"  />
+                </StackPanel>
+            </Border>
         </DataTemplate>
 
         <!-- Header Template -->
         <DataTemplate DataType="{x:Type vm:WebHeaderViewModel}">
+            <Border  BorderBrush="Gray" BorderThickness="1" Margin="3">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="HEADER" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
+                        </Border>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                        <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="Level: " VerticalAlignment="Center"  FontWeight="Bold"  />
+                        </Border>
+                        <TextBox Grid.Column="2" Text="{Binding Level}" AcceptsReturn="False" AcceptsTab="False" FontWeight="Bold" />
 
-                <Button Content="↑" Grid.Row="0" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemUpCommand}" />
-                <Button Content="↓" Grid.Row="1" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemDownCommand}"  />
-
-
-                <Border Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
-                        BorderBrush="Gray" BorderThickness="1" Margin="3">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="50"/>
-                                <ColumnDefinition Width="50"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="HEADER" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
-                            </Border>
-
-                            <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="Level: " VerticalAlignment="Center"  FontWeight="Bold"  />
-                            </Border>
-                            <TextBox Grid.Column="2" Text="{Binding Level}" AcceptsReturn="False" AcceptsTab="False" FontWeight="Bold" />
-
-                            <Button Grid.Column="3" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
-                        </Grid>
-                        <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray"
+                        <Button Grid.Column="3" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
+                    </Grid>
+                    <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray"
                              FontWeight="Bold" Padding="3"  />
-                    </StackPanel>
-                </Border>
-            </Grid>
+                </StackPanel>
+            </Border>
         </DataTemplate>
 
         <!-- List Template -->
         <DataTemplate DataType="{x:Type vm:WebListViewModel}">
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="3">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="LIST" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                        </Border>
 
-                <Button Content="↑" Grid.Row="0" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemUpCommand}" />
-                <Button Content="↓" Grid.Row="1" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemDownCommand}"  />
+                        <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="Ordered" FontWeight="Bold"  VerticalAlignment="Center"  />
+                        </Border>
 
+                        <Border Grid.Column="2" VerticalAlignment="Stretch" Background="LightGray">
+                            <CheckBox  IsChecked="{Binding IsOrdered}" VerticalAlignment="Center" />
+                        </Border>
 
-                <Border Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
-                        BorderBrush="Gray" BorderThickness="1" Margin="3">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="50"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="LIST" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
-
-                            </Border>
-
-                            <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="Ordered" FontWeight="Bold"  VerticalAlignment="Center"  />
-                            </Border>
-
-                            <Border Grid.Column="2" VerticalAlignment="Stretch" Background="LightGray">
-                                <CheckBox  IsChecked="{Binding IsOrdered}" VerticalAlignment="Center" />
-                            </Border>
-
-                            <Button Grid.Column="3" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
-                        </Grid>
-                        <TextBox Text="{Binding Content}" AcceptsReturn="True" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray"
+                        <Button Grid.Column="3" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
+                    </Grid>
+                    <TextBox Text="{Binding Content}" AcceptsReturn="True" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray"
                              Padding="3" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+                </StackPanel>
+            </Border>
         </DataTemplate>
 
         <!-- Image Template -->
         <DataTemplate DataType="{x:Type vm:WebImageViewModel}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="3">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="IMAGE" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
+                        </Border>
+                        <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
+                            <TextBlock Grid.Column="0" Text="Enter image url address" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3 0" />
+                        </Border>
 
-                <Button Content="↑" Grid.Row="0" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemUpCommand}" />
-                <Button Content="↓" Grid.Row="1" Grid.Column="0" CommandParameter="{Binding}" Command="{Binding ElementName=PageView, Path=DataContext.MoveItemDownCommand}"  />
-
-
-                <Border Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
-                        BorderBrush="Gray" BorderThickness="1" Margin="3">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="50"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="IMAGE" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
-                            </Border>
-                            <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
-                                <TextBlock Grid.Column="0" Text="Enter image url address" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3 0" />
-                            </Border>
-
-                            <Button Grid.Column="2" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
-                        </Grid>
-                        <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray" Padding="3" Foreground="Blue" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+                        <Button Grid.Column="2" Content="Delete" Command="{Binding ElementName=PageView, Path=DataContext.RemoveItemCommand }" CommandParameter="{Binding}" />
+                    </Grid>
+                    <TextBox Text="{Binding Content}" AcceptsReturn="False" AcceptsTab="False" TextWrapping="Wrap" BorderThickness="0 1 0 0" BorderBrush="Gray" Padding="3" Foreground="Blue" />
+                </StackPanel>
+            </Border>
         </DataTemplate>
 
         <!-- Page Template -->
@@ -196,7 +132,7 @@
     <Border Margin="3" d:IsHidden="True">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
@@ -245,7 +181,10 @@
 
                 <ListBox  x:Name="PageView" Grid.Row="1" DataContext="{Binding Path=WebSiteViewModel.SelectedWebPageViewModel}" ItemsSource="{Binding WebElementViewModels}"
                      HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.CanContentScroll="False"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="#eee" />
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="#eee"
+                     dd:DragDrop.IsDragSource="True"
+                     dd:DragDrop.IsDropTarget="True"
+                     dd:DragDrop.DropHandler="{Binding}" />
             </Grid>
 
 

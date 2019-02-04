@@ -25,6 +25,7 @@ namespace WebMaker.WPF
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
+
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using GongSolutions.Wpf.DragDrop;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using WebMaker.Web.General;
 
@@ -8,7 +10,7 @@ namespace WebMaker.ViewModel
     /// <summary>
     /// ViewModel pro WebPage
     /// </summary>
-    public class WebPageViewModel : BaseViewModel
+    public class WebPageViewModel : BaseViewModel, IDropTarget
     {
         private bool _isMain;
         private string _title;
@@ -176,6 +178,25 @@ namespace WebMaker.ViewModel
         /// Přidá odstavec
         /// </summary>
         public void AddParagraph() => WebElementViewModels.Add(new WebParagraphViewModel());
+
+        void IDropTarget.DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is WebElementViewModel)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        void IDropTarget.Drop(IDropInfo dropInfo)
+        {
+            var webElementViewModel = dropInfo.Data as WebElementViewModel;
+            if (!(webElementViewModel is null))
+            {
+                WebElementViewModels.Remove(webElementViewModel);
+                WebElementViewModels.Insert(dropInfo.InsertIndex < WebElementViewModels.Count ? dropInfo.InsertIndex : WebElementViewModels.Count, webElementViewModel);
+            }
+        }
 
         /// <summary>
         /// Posune položku dolů
