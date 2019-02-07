@@ -1,6 +1,8 @@
 ﻿using System.Windows.Input;
 using WebMaker.Server;
 using System.Linq;
+using System;
+using System.Windows.Forms;
 
 namespace WebMaker.ViewModel
 {
@@ -42,7 +44,7 @@ namespace WebMaker.ViewModel
             get => _iPAddress;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value) && value != _iPAddress)
+                if (value != _iPAddress)
                 {
                     _iPAddress = value;
                     RaiseNotifyChanged();
@@ -83,18 +85,28 @@ namespace WebMaker.ViewModel
         /// </summary>
         public void StartStopServer()
         {
-            if (IsRunning)
+            try
             {
-                webMakerServer.Stop();
-                IsRunning = false;
+                if (IsRunning)
+                {
+                    webMakerServer.Stop();
+                    IsRunning = false;
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(IPAddress))
+                    {
+                        webMakerServer.IPAddress = new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
+                    }
+                    webMakerServer.Start();
+                    IsRunning = true;
+                }
+                RaiseNotifyChanged(nameof(ButtonText));
             }
-            else
+            catch (Exception e)
             {
-                webMakerServer.IPAddress = new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
-                webMakerServer.Start();
-                IsRunning = true;
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            RaiseNotifyChanged(nameof(ButtonText));
         }
     }
 }
