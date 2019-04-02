@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -10,7 +11,7 @@ namespace WebMaker.Server
     /// <summary>
     /// Třída poskytující jednoduchý webový server
     /// </summary>
-    public class WebMakerServer
+    public class WebMakerServer : IDisposable
     {
         /// <summary>
         /// Výchozí port
@@ -24,6 +25,9 @@ namespace WebMaker.Server
 
         private IPAddress _iPAddress;
         private int _port = DefaultPort;
+
+        public bool IsRunning => httpListener.IsListening;
+
 
         /// <summary>
         /// Vytvoří instanci třídy WebMakerServer
@@ -50,33 +54,40 @@ namespace WebMaker.Server
 
         private void Server()
         {
-            while (true)
+            while (IsRunning)
             {
-                var ctx = httpListener.GetContext();
-                var response = ctx.Response;
+                try
+                {
+                    var ctx = httpListener.GetContext();
 
-                string responseString;
-                var requestUrl = ctx.Request.RawUrl.TrimStart('/', '\\');
-                if (string.IsNullOrEmpty(requestUrl))
-                {
-                    responseString = WebSiteProvider.WebSite.GetMainPageHtml();
-                }
-                else if (requestUrl.Contains(".html"))
-                {
-                    responseString = GetPage(requestUrl);
-                }
-                else
-                {
-                    response.StatusCode = 404;
-                    response.Close();
-                    continue;
-                }
+                    var response = ctx.Response;
 
-                var buffer = Encoding.UTF8.GetBytes(responseString);
-                response.ContentLength64 = buffer.LongLength;
-                using (var output = response.OutputStream)
+                    string responseString;
+                    var requestUrl = ctx.Request.RawUrl.TrimStart('/', '\\');
+                    if (string.IsNullOrEmpty(requestUrl))
+                    {
+                        responseString = WebSiteProvider.WebSite.GetMainPageHtml();
+                    }
+                    else if (requestUrl.Contains(".html"))
+                    {
+                        responseString = GetPage(requestUrl);
+                    }
+                    else
+                    {
+                        response.StatusCode = 404;
+                        response.Close();
+                        continue;
+                    }
+
+                    var buffer = Encoding.UTF8.GetBytes(responseString);
+                    response.ContentLength64 = buffer.LongLength;
+                    using (var output = response.OutputStream)
+                    {
+                        output.Write(buffer, 0, buffer.Length);
+                    }
+                } catch
                 {
-                    output.Write(buffer, 0, buffer.Length);
+                    return;
                 }
             }
         }
@@ -98,11 +109,6 @@ namespace WebMaker.Server
                 UpdatePrefixes();
             }
         }
-
-        /// <summary>
-        /// Zda server běží
-        /// </summary>
-        public bool IsRunning => thread.IsAlive;
 
         /// <summary>
         /// Číslo portu
@@ -146,13 +152,10 @@ namespace WebMaker.Server
         /// </summary>
         public void Start()
         {
-            if (!httpListener.IsListening)
-            {
-                httpListener.Start();
-            }
             if (!IsRunning)
             {
                 SetUpThread();
+                httpListener.Start();
                 thread.Start();
             }
         }
@@ -162,13 +165,10 @@ namespace WebMaker.Server
         /// </summary>
         public void Stop()
         {
-            if (IsRunning)
-            {
-                thread.Abort();
-            }
-            if (httpListener.IsListening)
+            if(IsRunning)
             {
                 httpListener.Stop();
+                thread.Join();
             }
         }
 
@@ -216,5 +216,7 @@ namespace WebMaker.Server
                 httpListener.Prefixes.Add(prefix);
             }
         }
+
+        public void Dispose() => Stop();
     }
 }
