@@ -106,7 +106,7 @@ namespace WebMaker.ViewModel
                 }
             }
         }
-
+        
         /// <summary>
         /// Tloušťka fontu pro titulek
         /// </summary>
@@ -190,8 +190,7 @@ namespace WebMaker.ViewModel
 
         void IDropTarget.Drop(IDropInfo dropInfo)
         {
-            var webElementViewModel = dropInfo.Data as WebElementViewModel;
-            if (!(webElementViewModel is null))
+            if (dropInfo.Data is WebElementViewModel webElementViewModel)
             {
                 WebElementViewModels.Remove(webElementViewModel);
                 WebElementViewModels.Insert(dropInfo.InsertIndex < WebElementViewModels.Count ? dropInfo.InsertIndex : WebElementViewModels.Count, webElementViewModel);

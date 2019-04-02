@@ -41,6 +41,8 @@ namespace WebMaker.ViewModel
         /// </summary>
         public abstract WebElement WebElement { get; }
 
+        public abstract string WebElementName { get; }
+
         /// <summary>
         /// Vytvoří WebElementViewModel z WebElementu
         /// </summary>

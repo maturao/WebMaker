@@ -3,6 +3,7 @@ using WebMaker.Server;
 using System.Linq;
 using System;
 using System.Windows.Forms;
+using System.Net;
 
 namespace WebMaker.ViewModel
 {
@@ -18,13 +19,13 @@ namespace WebMaker.ViewModel
         private string _iPAddress;
         private bool _isRunning = false;
 
-        /// <summary>
-        /// Vytvoří novou instanci třídy WebMakerServerViewModel
-        /// </summary>
-        public WebMakerServerViewModel()
+
+        public WebMakerServerViewModel ()
         {
-            StartStopServerCommand = new RelayCommand(StartStopServer);
+            SetIPAddressCommand = new RelayCommand(SetIPAddress);
         }
+
+        ~WebMakerServerViewModel() => webMakerServer.Dispose();
 
         /// <summary>
         /// Text na tlačítku pro spouštění/vypnutí servru
@@ -52,61 +53,88 @@ namespace WebMaker.ViewModel
             }
         }
 
+        private IPAddress GetIPAddress()
+        {
+            if (string.IsNullOrWhiteSpace(IPAddress))
+            {
+                return null;
+            }
+            return new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
+        }
+
         /// <summary>
         /// Zda server běží
         /// </summary>
         public bool IsRunning
         {
             get => _isRunning;
-            private set
+            set
             {
                 if (value != _isRunning)
                 {
-                    _isRunning = value;
-                    RaiseNotifyChanged();
-                    RaiseNotifyChanged(nameof(CanEditAdress));
+                    try
+                    {
+                        if (IsRunning)
+                        {
+                            webMakerServer.Stop();
+                        }
+                        else
+                        {
+                            webMakerServer.IPAddress = GetIPAddress();
+                            webMakerServer.Start();
+                        }
+                        _isRunning = value;
+                        RaiseNotifyChanged();
+                        RaiseNotifyChanged(nameof(CanEditAdress));
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
                 }
             }
         }
-
-        /// <summary>
-        /// Command pro spuštění/vypnutí serveru
-        /// </summary>
-        public ICommand StartStopServerCommand { get; }
-
         internal IWebSiteProvider WebSiteProvider
         {
             get => webMakerServer.WebSiteProvider;
             set => webMakerServer.WebSiteProvider = value;
         }
 
+        public ICommand SetIPAddressCommand { get; }
+
+        private void SetIPAddress()
+        {
+            IPAddress = Microsoft.VisualBasic.Interaction.InputBox("Enter IP Address");
+        }
+
         /// <summary>
         /// Spustí/vypne server
         /// </summary>
-        public void StartStopServer()
-        {
-            try
-            {
-                if (IsRunning)
-                {
-                    webMakerServer.Stop();
-                    IsRunning = false;
-                }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(IPAddress))
-                    {
-                        webMakerServer.IPAddress = new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
-                    }
-                    webMakerServer.Start();
-                    IsRunning = true;
-                }
-                RaiseNotifyChanged(nameof(ButtonText));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //public void StartStopServer()
+        //{
+        //    try
+        //    {
+        //        if (IsRunning)
+        //        {
+        //            webMakerServer.Stop();
+        //            IsRunning = false;
+        //        }
+        //        else
+        //        {
+        //            if (!string.IsNullOrWhiteSpace(IPAddress))
+        //            {
+        //                webMakerServer.IPAddress = new System.Net.IPAddress(IPAddress.Split('.').Select(octet => byte.Parse(octet)).ToArray());
+        //            }
+        //            webMakerServer.Start();
+        //            IsRunning = true;
+        //        }
+        //        RaiseNotifyChanged(nameof(ButtonText));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
     }
 }

@@ -8,7 +8,7 @@ namespace WebMaker.ViewModel
     /// <summary>
     /// ViewModel třídy WebHeader
     /// </summary>
-    public class WebHeaderViewModel : WebElementViewModel<string>
+    public class WebHeaderViewModel : WebStringElementViewModel
     {
         /// <summary>
         /// Nejvyšší možný level nadpisu
@@ -52,21 +52,25 @@ namespace WebMaker.ViewModel
         /// WebElement
         /// </summary>
         public override WebElement WebElement => new WebHeader(Level) { Content = Content };
+
+        public override string WebElementName => "Header";
     }
     /// <summary>
     /// ViewModel pro WebImage
     /// </summary>
-    public class WebImageViewModel : WebElementViewModel<string>
+    public class WebImageViewModel : WebStringElementViewModel
     {
         /// <summary>
         /// WebElement
         /// </summary>
         public override WebElement WebElement => new WebImage() { Content = Content };
+
+        public override string WebElementName => "Image";
     }
     /// <summary>
     /// ViewModel pro WebList
     /// </summary>
-    public class WebListViewModel : WebElementViewModel<string>
+    public class WebListViewModel : WebStringElementViewModel
     {
         private bool _isOrdered;
         /// <summary>
@@ -88,15 +92,19 @@ namespace WebMaker.ViewModel
         /// WebElement
         /// </summary>
         public override WebElement WebElement => new WebList(IsOrdered) { Content = Content?.Split('\n').ToList() };
+
+        public override string WebElementName => "List";
     }
     /// <summary>
     /// ViewModel pro WebParagraph
     /// </summary>
-    public class WebParagraphViewModel : WebElementViewModel<string>
+    public class WebParagraphViewModel : WebStringElementViewModel
     {
         /// <summary>
         /// WebElement
         /// </summary>
         public override WebElement WebElement => new WebParagraph() { Content = Content };
+
+        public override string WebElementName => "Paragraph";
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using CefSharp;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -16,16 +17,49 @@ namespace WebMaker.ViewModel
         private WebPageViewModel _selectedWebPageViewModel;
         private ObservableCollection<WebPageViewModel> _webPageViewModels = new ObservableCollection<WebPageViewModel>();
 
+        public BasicWebStyleViewModel BasicWebStyleViewModel { get; }
+
         /// <summary>
         /// Vytvoří novou instanci třídy WebSiteViewModel
         /// </summary>
         public WebSiteViewModel()
         {
+            BasicWebStyleViewModel = new BasicWebStyleViewModel();
             AddPageCommand = new RelayCommand(AddPage);
             DeletePageCommand = new RelayCommand(DeletePage);
             SaveCommand = new RelayCommand(Save);
             SetMainPageCommand = new RelayCommand(SetMainPage);
+            BrowserRequestHandler = new OnBeforeBrowseHandler(OnBeforeBrowseHandler);
+            RefreshPageCommand = new RelayCommand(RefreshPage);
         }
+
+        private bool OnBeforeBrowseHandler(IRequest request, bool userGesture)
+        {
+            if (userGesture)
+            {
+                var pagefilename = request.Url.Substring(request.Url.LastIndexOf("/") + 1);
+                try
+                {
+                    return true;
+                }
+                finally
+                {
+                    var site = WebSite;
+                    var pageIndex = site.FindIndex(page => page.Filename == pagefilename);
+                    SelectedWebPageViewModel = WebPageViewModels[pageIndex];
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void RefreshPage() => RaiseNotifyChanged(nameof(SelectedWebPageHtml));
+
+        public ICommand RefreshPageCommand { get; }
+
+        public IRequestHandler BrowserRequestHandler { get; }
 
         /// <summary>
         /// Command pro přidání nové stránky
@@ -52,7 +86,18 @@ namespace WebMaker.ViewModel
                 {
                     _selectedWebPageViewModel = value;
                     RaiseNotifyChanged();
+                    RaiseNotifyChanged(nameof(SelectedWebPageHtml));
                 }
+            }
+        }
+
+        public string SelectedWebPageHtml
+        {
+            get
+            {
+                var webSite = WebSite;
+                var selectedPageIndex = WebPageViewModels.IndexOf(SelectedWebPageViewModel);
+                return WebSite.GetPageHtml(selectedPageIndex);
             }
         }
 
@@ -84,7 +129,7 @@ namespace WebMaker.ViewModel
         {
             get
             {
-                var webSite = new WebSite();
+                var webSite = new WebSite(BasicWebStyleViewModel.BasicWebStyle);
                 webSite.AddRange(WebPageViewModels.Select(webPageViewModel => webPageViewModel.WebPage));
                 webSite.SetMainPage(WebPageViewModels.IndexOf(WebPageViewModels.First(webPageViewModel => webPageViewModel.IsMain)));
                 return webSite;
@@ -119,11 +164,24 @@ namespace WebMaker.ViewModel
             if (WebPageViewModels.Count > 1)
             {
                 var webPage = (webPageViewModel as WebPageViewModel);
+                if (webPage == SelectedWebPageViewModel)
+                {
+                    var index = WebPageViewModels.IndexOf(webPage);
+                    if (index == 0)
+                    {
+                        SelectedWebPageViewModel = WebPageViewModels[1];
+                    }
+                    else
+                    {
+                        SelectedWebPageViewModel = WebPageViewModels[index - 1];
+                    }
+                }
                 WebPageViewModels.Remove(webPage);
                 if (webPage.IsMain)
                 {
                     WebPageViewModels[0].IsMain = true;
                 }
+                RaiseNotifyChanged(nameof(SelectedWebPageHtml));
             }
         }
         /// <summary>

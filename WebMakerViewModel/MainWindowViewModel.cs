@@ -23,11 +23,13 @@ namespace WebMaker.ViewModel
             WebSiteViewModel.SelectedWebPageViewModel = WebSiteViewModel.WebPageViewModels[0];
             WebSiteViewModel.SetMainPage(WebSiteViewModel.SelectedWebPageViewModel);
 
-            WebMakerServerViewModel = new WebMakerServerViewModel();
-            WebMakerServerViewModel.WebSiteProvider = WebSiteViewModel;
+            WebMakerServerViewModel = new WebMakerServerViewModel
+            {
+                WebSiteProvider = WebSiteViewModel
+            };
 
             SaveTemplateCommand = new RelayCommand(SaveTemplate);
-            LoadTemplateCommand = new RelayCommand(LoadTemplate);
+            LoadTemplateCommand = new RelayCommand(LoadTemplate);            
         }
 
         /// <summary>
