@@ -7,17 +7,16 @@ namespace WebMaker.Web.General
     /// </summary>
     public class BasicWebStyle : WebStyle
     {
-        private static readonly StyleColor basicColor = new StyleColor(104, 154, 248);
-        private static readonly StyleColor darkGray = new StyleColor(202);
-        private static readonly StyleColor lightGray = new StyleColor(231);
+        public static readonly StyleColor BasicColor = new StyleColor(104, 154, 248);
+        public static readonly StyleColor DarkGray = new StyleColor(202);
+        public static readonly StyleColor LightGray = new StyleColor(231);
 
         /// <summary>
         /// Vytvoří instanci třídy BasicWebStyle
         /// </summary>
-        /// <param name="color">Barva stylu</param>
-        public BasicWebStyle(StyleColor color)
+        /// <param name="foreground">Barva stylu</param>
+        public BasicWebStyle(StyleColor background, StyleColor foreground, int borderRadius = 0, int navBorderWidth = 10)
         {
-            const int navBorderWidth = 10;
             const int navAPadding = 10;
             const int navAMinWidth = 175;
             const int transition = 100;
@@ -35,24 +34,24 @@ namespace WebMaker.Web.General
                 },
                 new StyleDefinition("body")
                 {
-                    new ColorStyleAttribute("background-color", lightGray),
+                    new ColorStyleAttribute("background-color", background),
                     new TextStyleAttribute("font-family", "Arial, Helvetica, sans-serif"),
                 },
                 new StyleDefinition("nav")
                 {
-                    new ColorStyleAttribute("background-color", lightGray),
+                    new ColorStyleAttribute("background-color", background),
                     new TextStyleAttribute("padding", "auto"),
 
                     new PixelStyleAttribute("border-width", navBorderWidth),
                     new TextStyleAttribute("border-style", "solid"),
-                    new ColorStyleAttribute("border-color", color),
+                    new ColorStyleAttribute("border-color", foreground),
                     new NoneStyleAttribute("border-left-style"),
                     new NoneStyleAttribute("border-right-style"),
                     new NoneStyleAttribute("border-top-style")
                 },
                 new StyleDefinition("nav a")
                 {
-                    new ColorStyleAttribute("background-color", darkGray),
+                    new ColorStyleAttribute("background-color", background),
                     new ColorStyleAttribute("color", StyleColor.Black),
 
                     new TextStyleAttribute("display", "inline-block"),
@@ -62,7 +61,9 @@ namespace WebMaker.Web.General
                     new PixelStyleAttribute("min-width", navAMinWidth),
 
                     new TextStyleAttribute("text-align", "center"),
-                    new NoneStyleAttribute("text-decoration")
+                    new NoneStyleAttribute("text-decoration"),
+
+                    new PixelStyleAttribute("border-radius", borderRadius)
                 },
                 new StyleDefinition("nav a:visited")
                 {
@@ -70,12 +71,12 @@ namespace WebMaker.Web.General
                 },
                 new StyleDefinition("nav a:hover")
                 {
-                    new ColorStyleAttribute("background-color", color + darkGray),
+                    new ColorStyleAttribute("background-color", foreground + background),
                     new UnitStyleAttribute("transition", transition, AttributeUnit.Ms)
                 },
                 new StyleDefinition("nav a.selected, nav a:active")
                 {
-                    new ColorStyleAttribute("background-color", color)
+                    new ColorStyleAttribute("background-color", foreground)
                 },
                 new StyleDefinition("nav a.selected")
                 {
@@ -98,10 +99,7 @@ namespace WebMaker.Web.General
             };
         }
 
-        /// <summary>
-        /// Vytvoří instanci třídy BasicWebStyle
-        /// </summary>
-        public BasicWebStyle() : this(basicColor)
+        public BasicWebStyle() : this(LightGray, BasicColor)
         {
         }
     }

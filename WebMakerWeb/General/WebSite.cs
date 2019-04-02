@@ -33,10 +33,21 @@ namespace WebMaker.Web.General
             }
         }
 
+
+
         /// <summary>
         /// Webový styl webu
         /// </summary>
-        public WebStyle WebSiteStyle { get; } = new BasicWebStyle();
+        public WebStyle WebSiteStyle { get; }
+
+        public WebSite(WebStyle webStyle)
+        {
+            WebSiteStyle = webStyle;
+        }
+
+        public WebSite() : this(new BasicWebStyle())
+        {
+        }
 
         /// <summary>
         /// Přidá webovou stránku
