@@ -69,7 +69,6 @@
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" VerticalAlignment="Stretch" Background="LightGray" >
                             <TextBlock Grid.Column="0" Text="LIST" FontWeight="Bold"  VerticalAlignment="Center" Margin="3 0" />
-
                         </Border>
 
                         <Border Grid.Column="1" VerticalAlignment="Stretch" Background="LightGray" >
